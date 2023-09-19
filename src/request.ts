@@ -26,13 +26,17 @@ const makeRequest = async (options = defaultOptions): Promise<any> =>
       });
 
       res.on('close', () => {
-        const response = JSON.parse(data);
+        try {
+          const response = JSON.parse(data);
 
-        if (response.error || response.errMsg) {
-          return reject(response);
+          if (response.error || response.errMsg) {
+            return reject(response);
+          }
+
+          resolve(response);
+        } catch (error) {
+          reject(data);
         }
-
-        resolve(response);
       });
     });
 
